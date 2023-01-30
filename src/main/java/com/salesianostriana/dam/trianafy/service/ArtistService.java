@@ -1,6 +1,8 @@
 package com.salesianostriana.dam.trianafy.service;
 
 
+import com.salesianostriana.dam.trianafy.exception.GlobalEntityListNotFoundException;
+import com.salesianostriana.dam.trianafy.exception.GlobalEntityNotFounException;
 import com.salesianostriana.dam.trianafy.model.Artist;
 import com.salesianostriana.dam.trianafy.repos.ArtistRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -17,16 +20,33 @@ public class ArtistService {
 
 
     public Artist add(Artist artist) {
-        return repository.save(artist);
+        return repository.save(
+                Artist.builder()
+                        .name(artist.getName())
+                        .build());
     }
 
-    public Optional<Artist> findById(Long id) {
-        return repository.findById(id);
+    public Artist findById(Long id) {
+        String message = "The artist with id %d was not found";
+
+        return repository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException(message, id));
     }
 
     public List<Artist> findAll() {
-        return repository.findAll();
+        String message = "The list was not found";
+
+        List<Artist> artistList = repository.findAll();
+
+        if (artistList.isEmpty())
+            throw new GlobalEntityListNotFoundException(message);
+
+        return artistList;
     }
+
+    public boolean artistExists(String artistName) {
+        return repository.existsByNameIgnoreCase(artistName);
+    }
+
 
     public Artist edit(Artist artist) {
         return repository.save(artist);
