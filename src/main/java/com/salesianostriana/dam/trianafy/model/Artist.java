@@ -27,9 +27,6 @@ public class Artist {
     @Id
     @GeneratedValue
     private Long id;
-
-    @UniqueArtist(message = "are unique")
-    @NotNull(message = "The name of the artist must not be blank")
     private String name;
 
 }

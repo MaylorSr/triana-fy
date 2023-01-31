@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.trianafy.controller.artist;
 
+import com.salesianostriana.dam.trianafy.dtos.song.SongResponseArtistDTO;
 import com.salesianostriana.dam.trianafy.model.Artist;
 import com.salesianostriana.dam.trianafy.service.ArtistService;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,8 @@ public class ArtistController {
 
 
     @PostMapping("/")
-    public ResponseEntity<Artist> newArtist(@Valid @RequestBody Artist artist) {
-        Artist created = artistService.add(artist);
+    public ResponseEntity<SongResponseArtistDTO> newArtist(@Valid @RequestBody SongResponseArtistDTO songResponseArtistDTO) {
+        Artist created = artistService.add(songResponseArtistDTO);
 
         URI createdURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -42,7 +43,20 @@ public class ArtistController {
 
         return ResponseEntity
                 .created(createdURI)
-                .body(created);
+                .body(SongResponseArtistDTO.of(created));
 
+    }
+
+    @PutMapping("/{id}")
+    public SongResponseArtistDTO editArtist(@Valid @RequestBody SongResponseArtistDTO songResponseArtistDTO, @PathVariable Long id) {
+        Artist edited = artistService.edit(songResponseArtistDTO, id);
+        return SongResponseArtistDTO.of(edited);
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteArtist(@PathVariable Long id) {
+        artistService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

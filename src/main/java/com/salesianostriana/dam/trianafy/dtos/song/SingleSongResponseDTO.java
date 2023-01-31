@@ -24,7 +24,7 @@ public class SingleSongResponseDTO {
                 .title(song.getTitle())
                 .album(song.getAlbum())
                 .year(song.getYear())
-                .artist(SongResponseArtistDTO.of(song.getArtist()))
+                .artist(song.getArtist() == null ? null : SongResponseArtistDTO.of(song.getArtist()))
                 .build();
     }
 }
