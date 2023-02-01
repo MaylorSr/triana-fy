@@ -2,11 +2,14 @@ package com.salesianostriana.dam.trianafy.service;
 
 
 import com.salesianostriana.dam.trianafy.dtos.playList.AllPlaylistsResponseDTO;
+import com.salesianostriana.dam.trianafy.dtos.playList.CreatePlaylistRequestDTO;
 import com.salesianostriana.dam.trianafy.dtos.playList.SinglePlaylistResponseDTO;
 import com.salesianostriana.dam.trianafy.exception.GlobalEntityListNotFoundException;
 import com.salesianostriana.dam.trianafy.exception.GlobalEntityNotFounException;
 import com.salesianostriana.dam.trianafy.model.Playlist;
+import com.salesianostriana.dam.trianafy.model.Song;
 import com.salesianostriana.dam.trianafy.repos.PlaylistRepository;
+import com.salesianostriana.dam.trianafy.repos.SongRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,7 @@ import java.util.Optional;
 public class PlaylistService {
 
     private final PlaylistRepository repository;
+    private final SongRepository songRepository;
 
     public Playlist add(Playlist playlist) {
         return repository.save(playlist);
@@ -66,5 +70,59 @@ public class PlaylistService {
         return repository.existsByNameIgnoreCase(playListName);
     }
 
+
+    public CreatePlaylistRequestDTO createPlayList(CreatePlaylistRequestDTO createPlaylistRequestDTO) {
+        Playlist newPlayList = repository.save(Playlist.builder()
+                .name(createPlaylistRequestDTO.getName())
+                .description(createPlaylistRequestDTO.getDescription())
+                .songs(createPlaylistRequestDTO.toPlaylist().getSongs())
+                .build());
+        createPlaylistRequestDTO.setId(newPlayList.getId());
+        return createPlaylistRequestDTO;
+    }
+
+    public AllPlaylistsResponseDTO editPlayList(Long id, CreatePlaylistRequestDTO createPlaylistRequestDTO) {
+
+        String message = "The playList was not found";
+        return repository.findById(id).map(old -> {
+            old.setName(createPlaylistRequestDTO.getName());
+            old.setDescription(createPlaylistRequestDTO.getDescription());
+            repository.save(old);
+
+            return AllPlaylistsResponseDTO.of(old);
+        }).orElseThrow(() -> new GlobalEntityNotFounException(message, id));
+
+    }
+
+    public void deletePlayList(Long id) {
+        if (repository.existsById(id))
+            repository.deleteById(id);
+    }
+
+    /******************************************************************************************************************/
+    public SinglePlaylistResponseDTO findByIdListSong(Long id) {
+        String message = "The List of PlayList with id %d not exists";
+        return repository.findById(id)
+                .map(SinglePlaylistResponseDTO::of)
+                .orElseThrow(() -> new GlobalEntityNotFounException(message, id));
+    }
+
+    public SinglePlaylistResponseDTO addSongToPlayList(Long id1, Long id2) {
+        String message = "The playList not exists";
+        return repository.findById(id1)
+                .map(old -> {
+                    old.getSongs().add(songRepository.findById(id2).orElseThrow(() -> new GlobalEntityNotFounException("The song not exists", id2)));
+                    repository.save(old);
+                    return SinglePlaylistResponseDTO.of(old);
+                })
+                .orElseThrow(() -> new GlobalEntityNotFounException(message, id1));
+    }
+
+    public Song findByIdListIdSong(Long id, Long id2) {
+        return repository.findById(id).map(old -> {
+            return songRepository.findById(id2).orElseThrow(() -> new GlobalEntityNotFounException("The song not exists", id2));
+        }).orElseThrow(() -> new GlobalEntityNotFounException("The playList not exists", id));
+
+    }
 
 }
