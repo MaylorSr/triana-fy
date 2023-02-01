@@ -4,4 +4,6 @@ import com.salesianostriana.dam.trianafy.model.Playlist;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
+    boolean existsByNameIgnoreCase(String name);
+
 }

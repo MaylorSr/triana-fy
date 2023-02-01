@@ -54,15 +54,16 @@ public class PlaylistService {
         return playlistList.stream().map(AllPlaylistsResponseDTO::of).toList();
     }
 
-    public Optional<SinglePlaylistResponseDTO> findByIdList(Long id) {
+    public SinglePlaylistResponseDTO findByIdList(Long id) {
         String message = "The PlayList with id %d was not found";
         Optional<Playlist> playlist = repository.findById(id);
 
-        if (playlist.isEmpty()) {
-            new GlobalEntityNotFounException(message, id);
-        }
-        return playlist.map(SinglePlaylistResponseDTO::of);
+        return playlist.map(SinglePlaylistResponseDTO::of).orElseThrow(() -> new GlobalEntityNotFounException(message, id));
 
+    }
+
+    public boolean playListExist(String playListName) {
+        return repository.existsByNameIgnoreCase(playListName);
     }
 
 

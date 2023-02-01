@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,13 +23,11 @@ public class PlayListController {
     public List<AllPlaylistsResponseDTO> findAll() {
         return playlistService.findAllList();
     }
-/*
+
     @GetMapping("/{id}")
-    public SinglePlaylistResponseDTO findById(@PathVariable Long id){
-
-
+    public SinglePlaylistResponseDTO findById(@PathVariable Long id) {
+        return playlistService.findByIdList(id);
     }
 
-*/
 
 }
