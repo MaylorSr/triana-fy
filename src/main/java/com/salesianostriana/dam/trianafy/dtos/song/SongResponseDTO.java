@@ -22,7 +22,7 @@ public class SongResponseDTO {
         return SongResponseDTO.builder()
                 .id(song.getId())
                 .title(song.getTitle())
-                .artist(song.getArtist().getName().isEmpty() ? " " : song.getArtist().getName())
+                .artist(song.getArtist() == null ? " " : song.getArtist().getName())
                 .album(song.getAlbum())
                 .year(song.getYear())
                 .build();
