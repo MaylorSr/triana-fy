@@ -91,5 +91,9 @@ public class SongService {
             repository.deleteById(id);
     }
 
+    public boolean songExists(String songName) {
+        return repository.existsByTitleIgnoreCase(songName);
+    }
+
 
 }

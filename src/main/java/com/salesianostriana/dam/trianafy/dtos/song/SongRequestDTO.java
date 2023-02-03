@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.trianafy.dtos.song;
 
+import com.salesianostriana.dam.trianafy.validation.annotation.UniqueSong;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SongRequestDTO {
+    @UniqueSong()
     @NotEmpty(message = "{postSongRequestDTOTittle.notempty}")
     private String title;
     private Long artistId;
