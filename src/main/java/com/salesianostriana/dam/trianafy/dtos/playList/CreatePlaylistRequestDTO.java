@@ -23,7 +23,7 @@ public class CreatePlaylistRequestDTO {
     @GeneratedValue
     private Long id;
     @UniquePlayList()
-    @NotBlank(message = "The name of the PlayList must not be blank")
+    @NotBlank(message = "{CreatePlaylistRequestDTOPlayListName.notempty}")
     private String name;
     private String description;
 

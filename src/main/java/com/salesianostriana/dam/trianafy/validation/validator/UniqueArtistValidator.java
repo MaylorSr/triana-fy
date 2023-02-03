@@ -19,6 +19,5 @@ public class UniqueArtistValidator implements ConstraintValidator<UniqueArtist, 
             return true;
         }
         return StringUtils.hasText(s) && !artistService.artistExists(s);
-
     }
 }

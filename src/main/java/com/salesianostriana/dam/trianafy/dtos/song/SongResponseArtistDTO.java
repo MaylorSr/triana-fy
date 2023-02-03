@@ -22,7 +22,7 @@ public class SongResponseArtistDTO {
 
     private Long id;
     @UniqueArtist()
-    @NotBlank(message = "The name of the artist must not be empty")
+    @NotBlank(message = "{SongResponseArtistDTOArtist}")
     private String artist;
 
     public static SongResponseArtistDTO of(Artist artist) {

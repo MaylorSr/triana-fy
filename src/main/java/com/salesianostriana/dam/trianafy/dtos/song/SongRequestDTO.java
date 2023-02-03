@@ -12,11 +12,11 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SongRequestDTO {
-    @NotEmpty(message = "The tittle was not empty")
+    @NotEmpty(message = "{postSongRequestDTOTittle.notempty}")
     private String title;
     private Long artistId;
-    @NotEmpty(message = "The album was not empty")
+    @NotEmpty(message = "{postSongRequesDTOAlbum.notempty}")
     private String album;
-    @NotEmpty(message = "The year was not empty")
+    @NotEmpty(message = "{The year was not empty}")
     private String year;
 }
